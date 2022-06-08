@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 扫描service相关的bean -->
+    <context:component-scan base-package="com.leiyu.service" />
+
+
+
+    <!--注解业务类-->
+    <bean id="UserService" class="com.leiyu.service.UserServiceImpl">
+        <property name="userMapper" ref="userMapper"/>
+    </bean>
+
+    <bean id="RoleService" class="com.leiyu.service.RoleServiceImpl">
+        <property name="roleMapper" ref="roleMapper"/>
+    </bean>
+
+    <bean id="ProviderService" class="com.leiyu.service.ProviderServiceImpl">
+        <property name="providerMapper" ref="providerMapper"/>
+    </bean>
+
+    <bean id="BillService" class="com.leiyu.service.BillServiceImpl">
+        <property name="billMapper" ref="billMapper"/>
+    </bean>
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!-- 注入数据库连接池 -->
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--结合aop实现事务-->
+<!--    &lt;!&ndash;配置事务的类&ndash;&gt;-->
+<!--    <tx:advice id="txAdvice" transaction-manager="transactionManager">-->
+<!--        <tx:attributes>-->
+<!--            &lt;!&ndash;支持当前事务，如果当前没有事务，就新建一个事务&ndash;&gt;-->
+<!--            &lt;!&ndash;*代表的是所有增删改操作&ndash;&gt;-->
+<!--            <tx:method name="*" propagation="REQUIRED"/>-->
+<!--        </tx:attributes>-->
+<!--    </tx:advice>-->
+<!--    <aop:config>-->
+<!--        <aop:pointcut id="txpointcut" expression="execution(* com.leiyu.mapper.*.*(..))"/>-->
+<!--        <aop:advisor advice-ref="txAdvice" pointcut-ref="txpointcut"/>-->
+<!--    </aop:config>-->
+</beans>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leiyu.mapper.UserMapper">
+    <!--根据用户名以及用户密码获取用户-->
+    <select id="getLoginUser" parameterType="map" resultType="user">
+        select * from smbms.smbms_user where userCode=#{userCode} and userPassword = #{userPassword}
+    </select>
+    <!--通过userID获取用户-->
+    <select id="getUserByID" parameterType="int" resultType="user">
+        select * from smbms.smbms_user where id=#{id}
+    </select>
+    <!--获取用户列表-->
+    <resultMap id="userRoleN" type="user">
+        <result property="userRoleName"  column="roleName"/>
+    </resultMap>
+    <select id="getUserList" resultMap="userRoleN" parameterType="map">
+        select * from smbms.smbms_user u,smbms.smbms_role r
+        <where>
+        <if test="queryname!=null">u.userName like "%"#{queryname}"%"</if>
+        <if test="userRoleID>0">and r.id=#{userRoleID}</if>
+        and u.gender = r.id
+        limit #{startIndex},#{pageSize}
+        </where>
+    </select>
+    <!--获取用户总数-->
+    <select id="getUserCount" parameterType="map" resultType="int">
+        select count(u.id) from smbms.smbms_user u,smbms.smbms_role r
+
+        <where>
+            <if test="queryname!=null">u.userName like "%"#{queryname}"%"</if>
+
+            <if test="userRoleID>0"> and r.id=#{userRoleID} </if>
+
+            and u.gender = r.id
+        </where>
+    </select>
+    <!--删除用户-->
+    <delete id="deleteUser"  parameterType="int">
+        delete from smbms.smbms_user where id = #{uid}
+    </delete>
+    <!--修改用户-->
+    <update id="updateUser" parameterType="user">
+        update smbms.smbms_user set userName=#{userName},gender=#{gender},birthday=#{birthday},phone=#{phone},address=#{address} where id = #{id}
+    </update>
+    <!--添加用户-->
+    <insert id="addUser" parameterType="user">
+        insert into smbms.smbms_user (userCode, userName, userPassword, gender, birthday, phone, address)
+        values (userCode=#{userCode},userName=#{userName},userPassword=#{userPassword},gender=#{gender},birthday=#{birthday},phone=#{phone},address=#{address});
+    </insert>
+
+    <select id="ucExist" parameterType="string" resultType="user">
+        select *
+        from smbms.smbms_user
+        where userCode=#{userCode};
+    </select>
+
+    <select id="updatePwd" parameterType="map">
+        update smbms.smbms_user
+        set userPassword = #{userPassword}
+        where id=#{id};
+    </select>
+</mapper>

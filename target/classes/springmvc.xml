@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!-- 配置SpringMVC -->
+    <!-- 1.开启SpringMVC注解驱动 -->
+    <mvc:annotation-driven />
+    <!-- 2.静态资源默认servlet配置-->
+    <mvc:default-servlet-handler/>
+
+    <!-- 3.配置jsp 显示ViewResolver视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/*.jsp"/>
+            <mvc:exclude-mapping path="/*.js"/>
+            <mvc:exclude-mapping path="/*.css"/>
+            <bean class="com.leiyu.filter.Visit"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+<!--&lt;!&ndash;    &lt;!&ndash;文件上传格式&ndash;&gt;-->
+<!--    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+<!--        &lt;!&ndash;defaultEncoding：请发求的编码格式必须和用户JSP的编码一致，以便正确读取表单中的内容。-->
+<!--            uploadTempDir:文件上传过程中的临时目录，上传完成后，临时文件会自动删除-->
+<!--            maxUploadSize:设置文件上传大小上限（单位为字节） &ndash;&gt;-->
+<!--        <property name="defaultEncoding" value="UTF-8" />-->
+<!--        <property name="maxUploadSize" value="102400000" />-->
+<!--        <property name="maxInMemorySize" value="40960"/>-->
+<!--    </bean>&ndash;&gt;-->
+
+<!--    &lt;!&ndash;处理json的乱码&ndash;&gt;-->
+<!--    <mvc:annotation-driven>-->
+<!--        <mvc:message-converters register-defaults="true">-->
+<!--            &lt;!&ndash; 启动Spring MVC的注解功能，完成请求和注解POJO的映射 注解请求映射-->
+<!--            默认是ISO-88859-1，避免乱码这里设置为UTF-8 &ndash;&gt;-->
+<!--            <bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
+<!--                <property name="supportedMediaTypes" value="text/html;charset=UTF-8" />-->
+<!--            </bean>-->
+    
+<!--            &lt;!&ndash; 启动JSON格式的配置,自动将格式转换成JSON格式，不需要其他类 &ndash;&gt;-->
+<!--            <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">-->
+<!--                <property name="supportedMediaTypes" value="application/json;charset=UTF-8" />-->
+<!--            </bean>-->
+<!--        </mvc:message-converters>-->
+<!--    </mvc:annotation-driven>-->
+
+    <!-- 4.扫描web相关的bean -->
+    <context:component-scan base-package="com.leiyu.controller" />
+<!--<context:annotation-config/>只能在已经被注册过的bean上面起作用  而context:component-scan除此之外还包括了@Component@Service@Config等的注解-->
+</beans>
