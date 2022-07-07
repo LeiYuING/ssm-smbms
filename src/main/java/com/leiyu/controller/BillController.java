@@ -5,6 +5,7 @@ import com.leiyu.pojo.Pro;
 import com.leiyu.service.BillService;
 import com.leiyu.service.ProviderService;
 import com.leiyu.util.PageSupport;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Slf4j
 public class BillController{
     private BillService billService;
     private ProviderService providerService;
@@ -138,7 +140,9 @@ public class BillController{
     public ModelAndView modify(ModelAndView modelAndView,@RequestParam("billid")String id){
         Bill bill = billService.getBillById(Integer.parseInt(id));
         modelAndView.addObject("bill",bill);
+        log.info("转发至订单页面");
         modelAndView.setViewName("jsp/billmodify");
+
         return modelAndView;
     }
     //修改订单信息
